@@ -1,4 +1,4 @@
-FROM node:16-alpine as build
+FROM node:16-alpine AS build
 
 # Definir argumentos de build
 ARG REACT_APP_API_URL
@@ -12,8 +12,8 @@ WORKDIR /app
 # Copiar arquivos de dependências
 COPY package*.json ./
 
-# Instalar dependências
-RUN npm ci --only=production
+# Instalar dependências (usando npm install em vez de npm ci)
+RUN npm install --production=false
 
 # Copiar o resto dos arquivos
 COPY . .
@@ -27,8 +27,15 @@ FROM nginx:alpine
 # Copiar os arquivos de build para o diretório do Nginx
 COPY --from=build /app/build /usr/share/nginx/html
 
-# Copiar configuração personalizada do Nginx (opcional)
-# COPY nginx.conf /etc/nginx/conf.d/default.conf
+# Configuração para o React Router
+RUN echo 'server { \
+  listen 80; \
+  location / { \
+    root /usr/share/nginx/html; \
+    index index.html index.htm; \
+    try_files $uri $uri/ /index.html; \
+  } \
+}' > /etc/nginx/conf.d/default.conf
 
 # Expor a porta
 EXPOSE 80
