@@ -5,23 +5,11 @@ on:
     branches: [ main ]
 
 jobs:
-  deploy:
+  dummy-success:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '16'
-          
-      - name: Install backend dependencies
-        run: cd backend && npm ci
+      - name: Checkout code
+        uses: actions/checkout@v3
         
-      - name: Install web dependencies
-        run: cd web && npm ci
-        
-      - name: Build web
-        run: cd web && npm run build
-        
-      # Adicione aqui os comandos para fazer deploy no seu servidor EasyPanel
+      - name: Dummy success step
+        run: echo "Este é um workflow de placeholder. O deploy real é feito pelo EasyPanel."
